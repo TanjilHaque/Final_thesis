@@ -1,0 +1,2 @@
+python3 sensitivity/cost_sensitivity.py fuzzy_data/fuzzy_test_data/problem_6x8_fuzzy.json data_for_sensitivity
+ python sensitivity/FOU_sensitivity.py fuzzy_data/fuzzy_test_data/problem_3x4_fuzzy.json

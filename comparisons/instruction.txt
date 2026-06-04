@@ -1,0 +1,2 @@
+python3 -m comparisons.cost_comparison 
+python3 comparisons/time_comparision.py test_data/test_data_12.json

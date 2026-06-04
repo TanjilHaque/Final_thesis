@@ -1,0 +1,10 @@
+data 1 is 3x4 from reference paper favors RAM
+data 2 is 5x6 favors RAM
+data 3 is 57x59 favors RAM
+data 4 is 10x10 favors RAM
+data 10 is 120x120 favors RAM via best cost
+data 11 is 200x180 favors RAM via best cost
+data 12 is 150x150 favors VAM in cost but takes less iterations in RAM
+data 13 is 67x71 favors RAM in best cost but takes a lot more iterations
+data 14 is 100x100 favors VAM in cost but RAM takes less iterations by only 3
+data 16 is 6x6 from a research paper.

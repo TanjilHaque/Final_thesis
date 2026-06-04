@@ -1,0 +1,1 @@
+python3 fuzzy_data/it2_fuzzifier.py

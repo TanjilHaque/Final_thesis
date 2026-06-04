@@ -1,0 +1,64 @@
+══════════════════  TRANSPORTATION METHOD — TIMING BENCHMARK  ══════════════════
+  Problem file  : data_for_sensitivity/problem_40x60_fou_sensitive/p_40x60_fou_minus_10_crisp.json
+  Problem size  : 40 × 60  (supply sum = 23975.8600, demand sum = 23975.8200)
+  Repetitions   : 30
+  Confidence    : 95 %  (two-tailed t, df = 29)
+  Timer         : time.perf_counter()  (highest resolution)
+──────────────────────────────────────────────────────────────────────────────
+
+  DETAILED TIMING STATISTICS  (all values in seconds)
+
+  Method                  Mean       Std Dev      Variance           Min           Max
+  ────────────────────────────────────────────────────────────────────────────
+  VAM                 0.030248      0.000361    0.00000013      0.029895      0.031593
+  RAM                 0.036608      0.000345    0.00000012      0.036074      0.037412
+  VAM+MODI            0.079607      0.000797    0.00000063      0.078590      0.081936
+  RAM+MODI            0.134415      0.001003    0.00000101      0.132955      0.136471
+
+  95 % CONFIDENCE INTERVALS FOR MEAN EXECUTION TIME
+
+  Method              Mean (s)       CI  Lower       CI  Upper      CV (%)
+  ────────────────────────────────────────────────────────────────────────────
+  VAM                 0.030248        0.030113        0.030382        1.19
+  RAM                 0.036608        0.036479        0.036736        0.94
+  VAM+MODI            0.079607        0.079309        0.079904        1.00
+  RAM+MODI            0.134415        0.134040        0.134790        0.75
+
+  CV (Coefficient of Variation) < 10 % indicates stable, reproducible measurements.
+
+──────────────────────────────────────────────────────────────────────────────
+
+  SOLUTION QUALITY  (transportation cost, last run)
+
+  Method                    Cost      vs. VAM+MODI      vs. RAM+MODI
+  ────────────────────────────────────────────────────────────────────────────
+  VAM               2791305.1737     +1298560.9573     +1298560.9573
+  RAM               3660409.8638     +2167665.6474     +2167665.6474
+  VAM+MODI          1492744.2164           +0.0000           +0.0000
+  RAM+MODI          1492744.2164           -0.0000           +0.0000
+
+──────────────────────────────────────────────────────────────────────────────
+
+  SPEED COMPARISON  (ratio of mean times)
+
+  Comparison                           Ratio  Interpretation
+  ────────────────────────────────────────────────────────────────────────────
+  VAM  vs  RAM                        0.8263  VAM is 1.21× faster than RAM
+  VAM+MODI  vs  RAM+MODI              0.5922  VAM+MODI is 1.69× faster than RAM+MODI
+  VAM  vs  VAM+MODI                   0.3800  VAM is 2.63× faster than VAM+MODI
+  RAM  vs  RAM+MODI                   0.2723  RAM is 3.67× faster than RAM+MODI
+
+──────────────────────────────────────────────────────────────────────────────
+
+  SUMMARY
+
+  • Fastest initial BFS         : VAM
+  • Fastest complete pipeline   : VAM+MODI
+  • Lowest solution cost        : RAM+MODI  (1492744.2164)
+  • VAM+MODI mean time          : 0.079607 s  (95 % CI [0.079309, 0.079904])
+  • RAM+MODI mean time          : 0.134415 s  (95 % CI [0.134040, 0.134790])
+
+  ✓  The 95 % CIs do NOT overlap — VAM+MODI is statistically
+     significantly faster at α = 0.05.
+
+══════════════════════════════════════════════════════════════════════════════

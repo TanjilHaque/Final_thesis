@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "method": "Karnik-Mendel Centroid + Proportional Balance",
+    "km_resolution_N": 1000,
+    "balance_enforced": true,
+    "balance_report": {
+      "method": "proportional_normalization",
+      "T_supply_before": 16.22394479,
+      "T_demand_before": 16.22037696,
+      "imbalance_before": 0.00356783,
+      "T_anchor": 16.22216088,
+      "T_supply_after": 16.22216088,
+      "T_demand_after": 16.22216088,
+      "imbalance_after": 0.0,
+      "supply_scale_factor": 0.99989004,
+      "demand_scale_factor": 1.00010998
+    },
+    "source_delta": 0.15,
+    "source_alpha": 0.45,
+    "source_beta": 0.75,
+    "source_gamma": 1.15,
+    "source_statistics": {
+      "global_min": 2.13,
+      "global_max": 9.3,
+      "global_mean": 4.92333333,
+      "global_std": 2.5308771
+    }
+  },
+  "cost_matrix": [
+    [2.353435, 5.262424, 7.348771, 6.589338],
+    [2.160761, 5.262424, 8.229481, 2.160761],
+    [2.353435, 6.589338, 9.423611, 2.160761]
+  ],
+  "supply": [5.48087079, 8.11867377, 2.62261632],
+  "demand": [2.21737724, 2.21737724, 5.19833812, 6.58906828]
+}
