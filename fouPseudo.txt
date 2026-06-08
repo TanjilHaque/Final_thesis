@@ -1,0 +1,129 @@
+FOU Perturbation Logic (Footprint of Uncertainty Sensitivity Analysis)
+=======================================================================
+
+PURPOSE:
+  Systematically expand or contract the Footprint of Uncertainty (FOU)
+  by modifying ONLY the LMF (Lower Membership Function) trapezoidal
+  points of every cost cell. Four independent datasets are produced:
+    F1 — FOU minus 20%   (multiplier 0.80×)
+    F2 — FOU minus 10%   (multiplier 0.90×)
+    F3 — FOU plus  10%   (multiplier 1.10×)
+    F4 — FOU plus  20%   (multiplier 1.20×)
+
+  The following are NEVER modified:
+    • UMF values (trapezoidal points and height h_u)
+    • LMF height (alpha)
+    • supply, demand, metadata
+
+IT2 TRAPEZOIDAL ENCODING:
+  Each cost cell stores:
+    UMF: [a1, a2, a3, a4, h_u]   — outer trapezoid
+    LMF: [b1, b2, b3, b4, alpha] — inner/embedded trapezoid
+
+  Valid IT2 structure requires:
+    a1 ≤ b1 ≤ b2          (left foot: LMF starts inside UMF)
+    a2 ≤ b2               (left plateau edge: LMF plateau ≥ UMF plateau start)
+    b3 ≤ a3               (right plateau edge: LMF plateau ≤ UMF plateau end)
+    b3 ≤ b4 ≤ a4          (right foot: LMF ends inside UMF)
+
+FOU GAP QUANTITIES (the "uncertainty widths"):
+  G1 = b1 − a1   left outer gap
+  G2 = b2 − a2   left inner gap
+  G3 = a3 − b3   right inner gap
+  G4 = a4 − b4   right outer gap
+
+ALGORITHM — Step 1: Compute FOU Gaps for a cell
+  Input:  umf = [a1, a2, a3, a4, h_u]
+          lmf = [b1, b2, b3, b4, alpha]
+
+  G1 ← max(b1 − a1, 0)
+  G2 ← max(b2 − a2, 0)
+  G3 ← max(a3 − b3, 0)
+  G4 ← max(a4 − b4, 0)
+
+  Return (G1, G2, G3, G4)
+
+ALGORITHM — Step 2: Transform LMF with multiplier M
+  Input:  umf, lmf, multiplier M
+
+  a1, a2, a3, a4 ← umf[0..3]
+  alpha ← lmf[4]
+
+  G1, G2, G3, G4 ← compute_fou_gaps(umf, lmf)
+
+  b1_new ← a1 + G1 × M
+  b2_new ← a2 + G2 × M
+  b3_new ← a3 − G3 × M
+  b4_new ← a4 − G4 × M
+
+  // Safety clamps (should not fire for |M−1| ≤ 0.20 on well-formed data)
+  plateau_mid ← (a2 + a3) / 2
+  b1_new ← clamp(b1_new, a1, a2)
+  b2_new ← clamp(b2_new, max(b1_new, a2), plateau_mid)
+  b3_new ← clamp(b3_new, plateau_mid, a3)
+  b4_new ← clamp(b4_new, b3_new, a4)
+
+  Return [b1_new, b2_new, b3_new, b4_new, alpha] + lmf[5..]
+
+  Note: M < 1 → gaps shrink → LMF moves outward → narrower FOU
+        M > 1 → gaps grow   → LMF moves inward  → wider  FOU
+
+ALGORITHM — Step 3: Apply FOU to entire cost matrix
+  Input:  cost_matrix (m×n), multiplier M, scenario_label
+
+  new_matrix ← deep_copy(cost_matrix)
+
+  FOR each row i in 0..m-1:
+    FOR each col j in 0..n-1:
+      cell ← new_matrix[i][j]
+      validate cell has "umf" and "lmf" keys
+      validate IT2 constraints on original cell
+      new_lmf ← transform_lmf(cell["umf"], cell["lmf"], M)
+      validate IT2 constraints on transformed cell
+      cell["lmf"] ← new_lmf
+      // cell["umf"] intentionally never written
+
+  Return new_matrix
+
+ALGORITHM — Step 4: Generate complete FOU dataset
+  Input:  original dataset, multiplier M, scenario_label
+
+  dataset ← deep_copy(original)
+  dataset["cost_matrix"] ← apply_fou_to_cost_matrix(
+                              original["cost_matrix"], M, scenario_label)
+  // supply, demand, metadata carried through unchanged
+
+  Return dataset
+
+ALGORITHM — Step 5: Clamping diagnostic (optional)
+  For each cell, compute clamping threshold:
+    plateau_span ← a3 − a2
+    G2 ← max(b2 − a2, 0)
+    threshold ← plateau_span / (2 × G2)   // or ∞ if G2 == 0
+
+  For each scenario multiplier M:
+    If M > threshold → inner-gap clamping will occur
+    Flag cell as "⚠ clamped" if any gap deviates from expected scaled value
+
+ALGORITHM — Step 6: Full pipeline orchestration
+  Input:  input_json_path, diagnose_flag
+
+  1. Load original dataset from JSON
+  2. Pre-validate IT2 structure of all cells
+  3. If diagnose_flag:
+       Run per-cell FOU width diagnostic
+       Warn if any clamping detected
+  4. FOR each scenario (F1, F2, F3, F4) with its multiplier:
+       perturbed ← generate_fou_dataset(original, multiplier, label)
+       Validate matrix shape unchanged
+       Assert supply, demand, metadata, UMF unmodified
+       Save perturbed dataset to output folder
+  5. Report completion
+
+MATHEMATICAL GUARANTEES:
+  1. UMF invariance:   UMF trapezoid [a1,a2,a3,a4] is never altered
+  2. LMF height fixed: alpha (LMF height) is preserved exactly
+  3. IT2 validity:     All IT2 constraints a1≤b1≤b2, a2≤b2, b3≤a3, b3≤b4≤a4
+                       are maintained via clamping
+  4. Deterministic:    Same input + same M → identical output
+  5. Symmetric design: ±10% and ±20% levels match cost sensitivity convention
