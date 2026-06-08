@@ -725,7 +725,7 @@ if __name__ == "__main__":
 #   "supply": [5.41, 8.01, 2.59],
 #   "demand": [2.19, 2.19, 5.13, 6.5]
 # }
-    with open("crisp_data/problem_40x60_crisp.json", "r") as f:
+    with open("crisp_data/problem_200x200_crisp.json", "r") as f:
         data = json.load(f)
 
     model = IT2TFSFuzzifier(
@@ -739,7 +739,7 @@ if __name__ == "__main__":
 
     result = model.transform(data)
 
-    model.export(result, "test_40x60_it2_output.json")
+    model.export(result, "fuzzy_data/fuzzy_test_data/problem_200x200_fuzzy.json")
 
     # ── Spot-check: print first cost cell ─────────────────────────
     cell = result["cost_matrix"][0][0]
