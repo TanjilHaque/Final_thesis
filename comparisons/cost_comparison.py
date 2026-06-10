@@ -345,7 +345,7 @@ if __name__ == "__main__":
     # -----------------------------------------------------
 
     #FILE_PATH = "data_for_sensitivity/problem_40x60_fou_sensitive/p_40x60_fou_plus_10_crisp.json"
-    FILE_PATH = "crisp_data/problem_200x200_crisp.json"
+    FILE_PATH = "crisp_data/problem_3x4_crisp.json"
 
     cost_matrix, supply, demand = load_problem(
         FILE_PATH

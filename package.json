@@ -1,0 +1,12 @@
+{
+  "name": "thesis-presentation",
+  "version": "1.0.0",
+  "description": "IT2-TrFTP Thesis Presentation Generator",
+  "main": "build_thesis_ppt.js",
+  "scripts": {
+    "start": "node build_thesis_ppt.js"
+  },
+  "dependencies": {
+    "pptxgenjs": "^3.12.0"
+  }
+}
